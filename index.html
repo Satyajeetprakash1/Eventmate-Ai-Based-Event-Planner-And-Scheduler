@@ -96,7 +96,6 @@
         }
         .logo-text-sub {
             font-size: 11px;
-            text-transform: uppercase;
             color: var(--text-muted);
         }
 
@@ -289,7 +288,8 @@
         <div class="logo-icon">E</div>
         <div>
             <div class="logo-text-main">EventMate</div>
-            <div class="logo-text-sub">AI Event Planner · Dark Edition</div>
+            
+            <div class="logo-text-sub">AI Event Planner</div>
         </div>
     </div>
 
@@ -300,7 +300,7 @@
             <div id="tabIndicator" class="tab-indicator"></div>
         </div>
 
-       
+        
         <div id="loginBox">
             <h2>Welcome back</h2>
             <div class="subtitle">Log in to manage your events, tickets & schedules.</div>
@@ -324,11 +324,12 @@
 
             <div class="footer-text">
                 <span>New here? <a href="javascript:void(0)" onclick="showRegister()">Create account</a></span>
-                <span>AI powered • Night mode</span>
+                
+                <span>Plan smarter with AI</span>
             </div>
         </div>
 
-        
+       
         <div id="registerBox" style="display:none;">
             <h2>Create your space</h2>
             <div class="subtitle">Sign up to start planning AI-assisted events.</div>
@@ -352,13 +353,15 @@
 
             <div class="footer-text">
                 <span>Already have an account? <a href="javascript:void(0)" onclick="showLogin()">Sign in</a></span>
-                <span>Secure · Minimal · Dark</span>
+                
+                <span>Welcome to EventMate</span>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+   
     const API_BASE = "http://127.0.0.1:5000/api";
 
     const tabIndicator = document.getElementById("tabIndicator");
@@ -392,7 +395,7 @@
         const msgBox = document.getElementById("registerMsg");
 
         if (!name || !email || !password) {
-            msgBox.innerHTML = "<span class='error error-pill'>All fields are required!</span>";
+            msgBox.innerHTML = "<span class='error'>All fields are required!</span>";
             return;
         }
 
@@ -405,14 +408,15 @@
             const data = await res.json();
 
             if (data.success) {
-                msgBox.innerHTML = `<span class='success success-pill'>${data.message}</span>`;
+                msgBox.innerHTML = `<span class='success'>${data.message}</span>`;
                 setTimeout(() => { showLogin(); }, 1500);
             } else {
-                msgBox.innerHTML = `<span class='error error-pill'>${data.message}</span>`;
+                msgBox.innerHTML = `<span class='error'>${data.message}</span>`;
             }
         } catch (err) {
-            console.error(err);
-            msgBox.innerHTML = "<span class='error error-pill'>Server error. Try again.</span>";
+            console.error("Register error:", err);
+            msgBox.innerHTML =
+                "<span class='error'>Cannot reach server. Is backend running on 127.0.0.1:5000?</span>";
         }
     }
 
@@ -453,8 +457,9 @@
             }, 800);
 
         } catch (err) {
-            console.error(err);
-            msgBox.innerHTML = "<span class='error'>Server error. Try again.</span>";
+            console.error("Login error:", err);
+            msgBox.innerHTML =
+                "<span class='error'>Cannot reach server. Is backend running on 127.0.0.1:5000?</span>";
         }
     }
 </script>
