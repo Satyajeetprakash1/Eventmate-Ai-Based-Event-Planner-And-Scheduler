@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EventMate | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg-main: #020617;
+            --card-bg: rgba(15,23,42,0.96);
+            --accent: #5efc8d;
+            --accent-alt: #0ea5e9;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-subtle: rgba(148,163,184,0.35);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        body {
+            min-height:100vh;
+            background: radial-gradient(circle at top, #020617 0%, #020617 45%, #000 100%);
+            color: var(--text-main);
+        }
+        header {
+            padding: 10px 18px;
+            border-bottom: 1px solid rgba(148,163,184,0.25);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:sticky;
+            top:0;
+            backdrop-filter: blur(12px);
+            background: rgba(2,6,23,0.92);
+        }
+        .logo {
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        .logo-pill {
+            width: 26px;
+            height: 26px;
+            border-radius:999px;
+            border:1px solid var(--accent);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:13px;
+            font-weight:700;
+            color:var(--accent);
+        }
+        .logo-text-main {
+            font-size: 15px;
+            font-weight:600;
+        }
+        .logo-text-sub {
+            font-size:10px;
+            color:var(--text-muted);
+        }
+        .user-block {
+            font-size: 13px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        .logout-btn {
+            border:none;
+            border-radius:999px;
+            padding:6px 12px;
+            font-size:12px;
+            cursor:pointer;
+            background:#111827;
+            color:var(--text-main);
+            border:1px solid rgba(148,163,184,0.4);
+        }
+        .logout-btn:hover { background:#0f172a; }
+
+        .main {
+            padding:16px 18px 22px;
+        }
+        .grid {
+            display:grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+            gap:16px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 14px;
+            border: 1px solid var(--border-subtle);
+            box-shadow:
+                0 0 0 1px rgba(15,23,42,0.8),
+                0 18px 32px rgba(0,0,0,0.55);
+        }
+        .card-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:8px;
+        }
+        .card-title {
+            font-size:14px;
+            font-weight:600;
+        }
+        .card-subtitle {
+            font-size:11px;
+            color:var(--text-muted);
+        }
+        .tag {
+            font-size:10px;
+            text-transform:uppercase;
+            letter-spacing:0.12em;
+            padding:3px 7px;
+            border-radius:999px;
+            border:1px solid rgba(148,163,184,0.5);
+            color:var(--text-muted);
+        }
+
+        .event-list {
+            margin-top:6px;
+            font-size:13px;
+        }
+        .event-item {
+            padding:8px 8px;
+            border-radius:10px;
+            border:1px solid rgba(31,41,55,0.9);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:8px;
+        }
+        .event-meta {
+            font-size:11px;
+            color:var(--text-muted);
+        }
+
+        .ai-box {
+            margin-top:6px;
+            font-size:13px;
+        }
+        .ai-input {
+            width:100%;
+            padding:8px 8px;
+            border-radius:10px;
+            border:1px solid rgba(148,163,184,0.4);
+            background:#020617;
+            color:var(--text-main);
+            outline:none;
+        }
+        .ai-btn {
+            margin-top:6px;
+            border:none;
+            border-radius:999px;
+            padding:7px 14px;
+            font-size:12px;
+            cursor:pointer;
+            background: linear-gradient(120deg, var(--accent), var(--accent-alt));
+            color:#020617;
+            font-weight:600;
+        }
+        .ai-output {
+            margin-top:8px;
+            font-size:12px;
+            color:var(--text-muted);
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: minmax(0,1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <div class="logo-pill">E</div>
+        <div>
+            <div class="logo-text-main">EventMate</div>
+            <div class="logo-text-sub">User Dashboard • Night mode</div>
+        </div>
+    </div>
+    <div class="user-block">
+        <span id="userName"></span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<main class="main">
+    <div class="grid">
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Your Events</div>
+                    <div class="card-subtitle">Upcoming bookings and schedules.</div>
+                </div>
+                <span class="tag">Overview</span>
+            </div>
+
+            <div id="eventsArea" class="event-list">
+                <div class="card-subtitle">Fetching events...</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">EventMate AI Assistant</div>
+                    <div class="card-subtitle">Ask how to plan your next event.</div>
+                </div>
+                <span class="tag">AI Helper</span>
+            </div>
+
+            <div class="ai-box">
+                <textarea id="aiQuestion" class="ai-input" rows="3"
+                    placeholder="e.g. Suggest a checklist for a tech meetup with 50 people."></textarea>
+                <button class="ai-btn" onclick="fakeAI()">Ask EventMate</button>
+                <div id="aiOutput" class="ai-output"></div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    function requireUser() {
+        const userStr = localStorage.getItem("user");
+        if (!userStr) {
+            alert("Not logged in");
+            window.location.href = "index.html";
+            return null;
+        }
+        const user = JSON.parse(userStr);
+        document.getElementById("userName").innerText = user.name;
+        return user;
+    }
+
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+    }
+
+    
+    function fakeAI() {
+        const q = document.getElementById("aiQuestion").value.trim();
+        const out = document.getElementById("aiOutput");
+        if (!q) {
+            out.textContent = "Type a question about your event, and I'll suggest tasks and ideas.";
+            return;
+        }
+
+        out.textContent =
+            "Here’s a basic smart checklist:\n" +
+            "• Define event goal & audience\n" +
+            "• Choose date & time\n" +
+            "• Book venue & setup\n" +
+            "• Plan registration or invites\n" +
+            "• Arrange snacks / catering\n" +
+            "• Prepare agenda & speakers\n" +
+            "• Test AV equipment\n" +
+            "• Send reminders 24 hours before\n" +
+            "You can hardcode more smart answers based on event type later.";
+    }
+
+    function loadDummyEvents() {
+        
+        const eventsArea = document.getElementById("eventsArea");
+        const now = new Date();
+        const demo = [
+            {
+                title: "Tech Meetup: Springboard x EventMate",
+                datetime: new Date(now.getTime() + 86400000),
+                location: "Infosys Virtual Room A",
+                tickets: "1 ticket booked"
+            },
+            {
+                title: "Friends Game Night",
+                datetime: new Date(now.getTime() + 3*86400000),
+                location: "Home",
+                tickets: "Personal event"
+            }
+        ];
+        let html = "";
+        demo.forEach(e => {
+            html += `<div class="event-item">
+                        <div>
+                            <div>${e.title}</div>
+                            <div class="event-meta">
+                                ${e.datetime.toLocaleString()} • ${e.location}
+                            </div>
+                        </div>
+                        <div class="event-meta">${e.tickets}</div>
+                    </div>`;
+        });
+        eventsArea.innerHTML = html;
+    }
+
+    const user = requireUser();
+    if (user) {
+        loadDummyEvents();
+    }
+</script>
+
+</body>
+</html>
