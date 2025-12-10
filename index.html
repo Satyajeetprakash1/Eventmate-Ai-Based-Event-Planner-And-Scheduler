@@ -6,184 +6,456 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        :root {
+            --bg-main: #050810;
+            --card-bg: rgba(15, 20, 35, 0.9);
+            --accent: #5efc8d;
+            --accent-soft: rgba(94, 252, 141, 0.2);
+            --accent-alt: #00e5ff;
+            --text-main: #f5f5f7;
+            --text-muted: #9ca3af;
+            --danger: #f97373;
+            --success: #4ade80;
+        }
+
         * {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
         body {
-            margin: 0;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            height: 100vh;
+            min-height: 100vh;
+            background: radial-gradient(circle at top left, #111827, #020617 55%, #000 100%);
+            color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
-        .container {
-            background: white;
-            width: 360px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+       
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            z-index: -1;
+            animation: float 18s infinite alternate ease-in-out;
+        }
+        .orb.one {
+            width: 280px;
+            height: 280px;
+            background: #22d3ee;
+            top: -40px;
+            left: -60px;
+        }
+        .orb.two {
+            width: 380px;
+            height: 380px;
+            background: #22c55e;
+            bottom: -100px;
+            right: -80px;
+            animation-delay: -4s;
+        }
+        @keyframes float {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            100% { transform: translate3d(40px, -30px, 0) scale(1.05); }
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+        }
+
+        .logo-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 0 18px rgba(94, 252, 141, 0.5);
+        }
+        .logo-text-main {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .logo-text-sub {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.86));
+            border-radius: 18px;
+            padding: 24px 22px 20px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            box-shadow:
+                0 0 0 1px rgba(15,23,42,0.8),
+                0 22px 45px rgba(0,0,0,0.65);
+            backdrop-filter: blur(18px);
+        }
+
+        .tabs {
+            display: flex;
+            padding: 4px;
+            background: rgba(15,23,42,0.9);
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .tab-pill {
+            flex: 1;
             text-align: center;
+            font-size: 13px;
+            padding: 8px 0;
+            cursor: pointer;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 1;
+            user-select: none;
+        }
+        .tab-pill.active {
+            color: var(--bg-main);
+            font-weight: 600;
+        }
+        .tab-indicator {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            width: 50%;
+            border-radius: 999px;
+            background: linear-gradient(120deg, var(--accent), var(--accent-alt));
+            box-shadow: 0 0 26px rgba(94,252,141,0.5);
+            transition: transform 0.32s ease;
+        }
+        .tab-indicator.right {
+            transform: translateX(100%);
         }
 
         h2 {
-            margin-bottom: 20px;
-            color: #222;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #4facfe;
-            border: none;
-            color: white;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #00c6ff;
-        }
-
-        .toggle {
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .toggle span {
-            color: #007BFF;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .brand {
             font-size: 22px;
-            font-weight: bold;
-            color: #4facfe;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
         }
-
-        .tagline {
+        .subtitle {
             font-size: 12px;
-            color: gray;
-            margin-bottom: 20px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
         }
 
-        .success {
-            color: green;
+        .field {
+            margin-bottom: 12px;
+            text-align: left;
+        }
+        .field label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .field input {
+            width: 100%;
+            padding: 10px 11px;
             font-size: 13px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15,23,42,0.9);
+            color: var(--text-main);
+            outline: none;
+            transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .field input::placeholder {
+            color: rgba(148, 163, 184, 0.6);
+        }
+        .field input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(94, 252, 141, 0.5), 0 0 22px rgba(94, 252, 141, 0.2);
+            background: radial-gradient(circle at top left, rgba(15,23,42,1), rgba(15,23,42,0.96));
         }
 
-        .error {
-            color: red;
-            font-size: 13px;
+        .primary-btn {
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px 0;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            background: linear-gradient(120deg, var(--accent), var(--accent-alt));
+            color: #020617;
+            box-shadow:
+                0 12px 35px rgba(34,197,94,0.25),
+                0 0 0 1px rgba(15,23,42,0.9);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+        }
+        .primary-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow:
+                0 18px 40px rgba(34,197,94,0.35),
+                0 0 0 1px rgba(15,23,42,0.9);
+        }
+        .primary-btn:active {
+            transform: translateY(0);
+            box-shadow:
+                0 10px 20px rgba(34,197,94,0.25),
+                0 0 0 1px rgba(15,23,42,0.9);
+        }
+
+        .note-line {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            text-align: left;
+        }
+        .note-line span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .message {
+            margin-top: 10px;
+            font-size: 12px;
+            min-height: 16px;
+        }
+        .message span {
+            padding: 2px 6px;
+            border-radius: 999px;
+        }
+        .message .error {
+            background: rgba(248, 113, 113, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+        .message .success {
+            background: rgba(22, 163, 74, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .footer-text {
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-text a {
+            color: var(--accent-alt);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 11px;
+        }
+
+        @media (max-width: 480px) {
+            .shell {
+                padding: 16px;
+            }
+            .card {
+                padding: 18px 16px 16px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="orb one"></div>
+<div class="orb two"></div>
 
-    <div class="brand">EventMate</div>
-    <div class="tagline">AI Based Event Planner & Scheduler</div>
-
-    <!-- LOGIN FORM -->
-    <div id="loginBox">
-        <h2>Login</h2>
-        <input type="email" id="loginEmail" placeholder="Email">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button onclick="login()">Login</button>
-
-        <div class="toggle">
-            Don’t have an account? <span onclick="showRegister()">Register</span>
+<div class="shell">
+    <div class="logo-bar">
+        <div class="logo-icon">E</div>
+        <div>
+            <div class="logo-text-main">EventMate</div>
+            <div class="logo-text-sub">AI Event Planner · Dark Edition</div>
         </div>
-
-        <p id="loginMsg"></p>
     </div>
 
-  
-    <div id="registerBox" class="hidden">
-        <h2>Register</h2>
-        <input type="text" id="regName" placeholder="Full Name">
-        <input type="email" id="regEmail" placeholder="Email">
-        <input type="password" id="regPassword" placeholder="Password">
-        <button onclick="register()">Register</button>
-
-        <div class="toggle">
-            Already have an account? <span onclick="showLogin()">Login</span>
+    <div class="card">
+        <div class="tabs">
+            <div id="tabLogin" class="tab-pill active" onclick="showLogin()">Sign In</div>
+            <div id="tabRegister" class="tab-pill" onclick="showRegister()">Sign Up</div>
+            <div id="tabIndicator" class="tab-indicator"></div>
         </div>
 
-        <p id="registerMsg"></p>
-    </div>
+       
+        <div id="loginBox">
+            <h2>Welcome back</h2>
+            <div class="subtitle">Log in to manage your events, tickets & schedules.</div>
 
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+
+            <button class="primary-btn" onclick="login()">Sign In</button>
+
+            <div class="note-line">
+                Default admin: <span>admin@eventmate.com / admin123</span>
+            </div>
+
+            <div class="message" id="loginMsg"></div>
+
+            <div class="footer-text">
+                <span>New here? <a href="javascript:void(0)" onclick="showRegister()">Create account</a></span>
+                <span>AI powered • Night mode</span>
+            </div>
+        </div>
+
+        
+        <div id="registerBox" style="display:none;">
+            <h2>Create your space</h2>
+            <div class="subtitle">Sign up to start planning AI-assisted events.</div>
+
+            <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="regName" placeholder="John Doe">
+            </div>
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="regEmail" placeholder="you@example.com">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="regPassword" placeholder="Choose a strong password">
+            </div>
+
+            <button class="primary-btn" onclick="register()">Sign Up</button>
+
+            <div class="message" id="registerMsg"></div>
+
+            <div class="footer-text">
+                <span>Already have an account? <a href="javascript:void(0)" onclick="showLogin()">Sign in</a></span>
+                <span>Secure · Minimal · Dark</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    function showRegister() {
-        document.getElementById("loginBox").classList.add("hidden");
-        document.getElementById("registerBox").classList.remove("hidden");
-    }
+    const API_BASE = "http://127.0.0.1:5000/api";
+
+    const tabIndicator = document.getElementById("tabIndicator");
+    const tabLogin = document.getElementById("tabLogin");
+    const tabRegister = document.getElementById("tabRegister");
 
     function showLogin() {
-        document.getElementById("registerBox").classList.add("hidden");
-        document.getElementById("loginBox").classList.remove("hidden");
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("registerBox").style.display = "none";
+        tabIndicator.classList.remove("right");
+        tabLogin.classList.add("active");
+        tabRegister.classList.remove("active");
+        document.getElementById("loginMsg").innerHTML = "";
+        document.getElementById("registerMsg").innerHTML = "";
     }
 
-    function register() {
-        let name = document.getElementById("regName").value;
-        let email = document.getElementById("regEmail").value;
-        let password = document.getElementById("regPassword").value;
+    function showRegister() {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("registerBox").style.display = "block";
+        tabIndicator.classList.add("right");
+        tabLogin.classList.remove("active");
+        tabRegister.classList.add("active");
+        document.getElementById("loginMsg").innerHTML = "";
+        document.getElementById("registerMsg").innerHTML = "";
+    }
 
-        if (name === "" || email === "" || password === "") {
-            document.getElementById("registerMsg").innerHTML =
-                "<span class='error'>All fields are required!</span>";
+    async function register() {
+        const name = document.getElementById("regName").value.trim();
+        const email = document.getElementById("regEmail").value.trim();
+        const password = document.getElementById("regPassword").value.trim();
+        const msgBox = document.getElementById("registerMsg");
+
+        if (!name || !email || !password) {
+            msgBox.innerHTML = "<span class='error error-pill'>All fields are required!</span>";
             return;
         }
 
-       
-        document.getElementById("registerMsg").innerHTML =
-            "<span class='success'>Registration successful! You can login now.</span>";
+        try {
+            const res = await fetch(`${API_BASE}/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password })
+            });
+            const data = await res.json();
 
-        setTimeout(() => {
-            showLogin();
-        }, 1200);
+            if (data.success) {
+                msgBox.innerHTML = `<span class='success success-pill'>${data.message}</span>`;
+                setTimeout(() => { showLogin(); }, 1500);
+            } else {
+                msgBox.innerHTML = `<span class='error error-pill'>${data.message}</span>`;
+            }
+        } catch (err) {
+            console.error(err);
+            msgBox.innerHTML = "<span class='error error-pill'>Server error. Try again.</span>";
+        }
     }
 
-    function login() {
-        let email = document.getElementById("loginEmail").value;
-        let password = document.getElementById("loginPassword").value;
+    async function login() {
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value.trim();
+        const msgBox = document.getElementById("loginMsg");
 
-        if (email === "" || password === "") {
-            document.getElementById("loginMsg").innerHTML =
-                "<span class='error'>Please enter email & password</span>";
+        if (!email || !password) {
+            msgBox.innerHTML = "<span class='error'>Please enter email & password</span>";
             return;
         }
 
-       
-        document.getElementById("loginMsg").innerHTML =
-            "<span class='success'>Login successful! Redirecting...</span>";
+        try {
+            const res = await fetch(`${API_BASE}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
 
-        setTimeout(() => {
-            window.location.href = "dashboard.html"; 
-        }, 1200);
+            const data = await res.json();
+
+            if (!data.success) {
+                msgBox.innerHTML = `<span class='error'>${data.message}</span>`;
+                return;
+            }
+
+            msgBox.innerHTML = "<span class='success'>Login successful. Redirecting...</span>";
+
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            setTimeout(() => {
+                if (data.user.role === "admin") {
+                    window.location.href = "admin.html";
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            }, 800);
+
+        } catch (err) {
+            console.error(err);
+            msgBox.innerHTML = "<span class='error'>Server error. Try again.</span>";
+        }
     }
 </script>
 
